@@ -7,7 +7,7 @@ Gameplan:
 
 -Do Tasks I & II together, as Task III and IV depend on correct implementations of transaction blocks and Nodes.
 
--Divide last two tasks, conquer, and consult each other to overcome any obstacles.
+-Divide and conquer last two tasks, and consult each other to overcome any obstacles.
 
 -Write unit tests for all functions
 
