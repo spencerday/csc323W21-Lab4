@@ -1,0 +1,79 @@
+Preliminary idea for structure of a "transaction block" that can support multiple
+inputs, outputs, and signatures for the 3 different types of transactions
+(transfer, merge, join)
+
+
+{
+    "NUMBER" : transaction identififer,
+    "TYPE" : transfer, merge, or join,
+    "INPUT" : [
+        {
+            "value" : value,
+            "key" : public key
+        },
+        ...
+        {
+            "value" : value,
+            "key" : public key
+        }
+    ],
+    "OUTPUT" : [
+        {
+            "keyCoin" : key
+        },
+        ...
+        {
+            "keyCoin" : key
+        }
+    ],
+    "SIGNATURE" : [
+        {
+            "signature" : value
+        },
+        ...
+
+        {
+            "signature" : value
+        }
+    ],
+    "HASHPOINTER" : { prior transaction object }
+    "NONCE" : value,
+    "PROOF" : SHA256 hash balue
+}
+
+
+Transaction defintion that is used in the Transaction File
+
+{
+    "NUMBER" : transaction identififer,
+    "TYPE" : transfer, merge, or join,
+    "INPUT" : [
+        {
+            "NUMBER" : transaction number
+        },
+        ...
+        {
+            "NUMBER" : transaction number
+        }
+    ],
+    "OUTPUT" : [
+        {
+            "value" : value,
+            "key" : pub key
+        },
+        ...
+        {
+            "value" : value,
+            "key" : pub key
+        }
+    ],
+    "SIGNATURE" : [
+        {
+            "signature" : value
+        },
+        ...
+
+        {
+            "signature" : value
+        }
+    }
