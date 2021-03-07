@@ -1,7 +1,8 @@
 import json
 from random import choice
 from hashlib import sha256
-from rsa import RSA, asciiToInt
+from Crypto.PublicKey import RSA
+from random import randint
 
 
 TYPES = ["trans", "join", "merge"]
@@ -12,28 +13,23 @@ class Transaction:
     Class used to generate random transactions
     """
 
-    def __init__(self, inputs):
+    def __init__(self, inputs, outputs, identity):
         """
         Parameters:
             inputs - set containing transaction numbers
+            outputs - a set of dicts in the form {"value" : value, "key" : pubKey"}
+            identity - RSA object
         """
-        self.TYPE = choice(TYPES)
-        self.INPUT = inputs
-        self.OUTPUT = self.getOutput(self.INPUT)
-        rsa = RSA()  # for creating signatures
-        self.SIGNATURE = [
-            rsa.sign(asciiToInt(self.TYPE)),
-            rsa.sign(asciiToInt(str(self.INPUT))),
-            rsa.sign(asciiToInt(str(self.OUTPUT)))
+        self.type = choice(TYPES)
+        self.input = inputs
+        self.output = outputs
+        self.signature = [
+            pow(int.from_bytes(sha256(bytes(self.type, 'latin')).digest(), byteorder='big'), self.keyPair.d, self.keyPair.n),
+            pow(int.from_bytes(sha256(bytes(self.input, 'latin')).digest(), byteorder='big'), self.keyPair.d, self.keyPair.n),
+            pow(int.from_bytes(sha256(bytes(self.output, 'latin')).digest(), byteorder='big'), self.keyPair.d, self.keyPair.n),
         ]
-        self.NUMBER = sha256(bytes(str(self.INPUT) + str(self.OUTPUT)
+        self.number = sha256(bytes(str(self.INPUT) + str(self.OUTPUT)
             + str(self.SIGNATURE), "latin")).hexdigest()
-
-    def getOutput(self, inputs):
-        """
-        Generates the outputs of (value:public key) pairs
-        """
-        #TODO: generate the pairs for each input
 
     def JSON(self):
         """
