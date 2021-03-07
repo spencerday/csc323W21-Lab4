@@ -31,8 +31,7 @@ if __name__ == '__main__':
         transaction = Transaction(new_input, generate_random_output(identities), choice(identities))
         transactions.append(transaction)
 
-    test = ""
-    for t in transactions:
-        test += t.JSON()
-        test += '\n$\n'
-    print(test)
+    # Write to file
+    with open("TransactionFile.json", "w") as f:
+        for t in transactions:
+            f.write(t.JSON() + "\n$\n")
