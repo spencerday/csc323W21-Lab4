@@ -38,7 +38,7 @@ inputs, outputs, and signatures for the 3 different types of transactions
     ],
     "HASHPOINTER" : { prior transaction object }
     "NONCE" : value,
-    "PROOF" : SHA256 hash balue
+    "PROOF" : SHA256 hash value
 }
 
 
@@ -76,4 +76,5 @@ Transaction defintion that is used in the Transaction File
         {
             "signature" : value
         }
-    }
+    ]
+}
