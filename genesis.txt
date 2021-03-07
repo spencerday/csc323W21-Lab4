@@ -1,0 +1,12 @@
+{
+    "NUMBER" : 0,
+    "TYPE" : trans,
+    "INPUT" : null,
+    "OUTPUT" : [
+        {
+            "value" : 25,
+            "key" : pub key
+        }
+    ],
+    "SIGNATURE" : null
+}

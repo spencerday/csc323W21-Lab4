@@ -6,8 +6,8 @@ from Crypto.PublicKey import RSA
 TYPES = ["trans", "join", "merge"]
 
 class ZCTransaction:
-    def __init__(self, inputs, prev):
-        self.type = choice(TYPES)
+    def __init__(self, type, inputs, prev):
+        self.type = type
         self.input = inputs
         self.output = []
         self.keyPair = RSA.generate(bits=1024)
@@ -22,6 +22,10 @@ class ZCTransaction:
         self.proof = None
     def JSON(self):
         return json.dumps(self.__dict__, indent=4, separators=(",", ": "))
+    def read_json(self, filename):
+        with open(filename) as f:
+            data = json.load(f)
+        return data
 
 
 
@@ -29,4 +33,5 @@ class ZCTransaction:
 
 if __name__ == '__main__':
     testblock = ZCTransaction()
+    genesis_block = ZCTransaction('trans', None)
 
