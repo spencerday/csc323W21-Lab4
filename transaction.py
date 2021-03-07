@@ -17,19 +17,19 @@ class Transaction:
         """
         Parameters:
             inputs - set containing transaction numbers
-            outputs - a set of dicts in the form {"value" : value, "key" : pubKey"}
+            outputs - a set of dicts in the form {value: (pubkey.n, pubKey.e)}
             identity - RSA object
         """
         self.type = choice(TYPES)
         self.input = inputs
         self.output = outputs
         self.signature = [
-            pow(int.from_bytes(sha256(bytes(self.type, 'latin')).digest(), byteorder='big'), self.keyPair.d, self.keyPair.n),
-            pow(int.from_bytes(sha256(bytes(self.input, 'latin')).digest(), byteorder='big'), self.keyPair.d, self.keyPair.n),
-            pow(int.from_bytes(sha256(bytes(self.output, 'latin')).digest(), byteorder='big'), self.keyPair.d, self.keyPair.n),
+            pow(int.from_bytes(sha256(bytes(self.type, 'latin')).digest(), byteorder='big'), identity.d, identity.n),
+            pow(int.from_bytes(sha256(bytes(str(self.input), 'latin')).digest(), byteorder='big'), identity.d, identity.n),
+            pow(int.from_bytes(sha256(bytes(str(self.output), 'latin')).digest(), byteorder='big'), identity.d, identity.n),
         ]
-        self.number = sha256(bytes(str(self.INPUT) + str(self.OUTPUT)
-            + str(self.SIGNATURE), "latin")).hexdigest()
+        self.number = sha256(bytes(str(self.input) + str(self.output)
+            + str(self.signature), "latin")).hexdigest()
 
     def JSON(self):
         """
