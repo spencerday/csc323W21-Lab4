@@ -4,29 +4,27 @@ inputs, outputs, and signatures for the 3 different types of transactions
 
 
 {
-    "NUMBER" : transaction identififer,
-    "TYPE" : transfer, merge, or join,
-    "INPUT" : [
+    "number" : transaction identififer,
+    "type" : transfer, merge, or join,
+    "input" : [
         {
-            "value" : value,
-            "key" : public key
+            value : (publickey.n, publickey.e)
         },
         ...
         {
-            "value" : value,
-            "key" : public key
+            value: public key
         }
     ],
-    "OUTPUT" : [
+    "output" : [
         {
-            "keyCoin" : key
+            "keycoin" : key
         },
         ...
         {
-            "keyCoin" : key
+            "keycoin" : key
         }
     ],
-    "SIGNATURE" : [
+    "signature" : [
         {
             "signature" : value
         },
@@ -36,45 +34,34 @@ inputs, outputs, and signatures for the 3 different types of transactions
             "signature" : value
         }
     ],
-    "HASHPOINTER" : { prior transaction object }
-    "NONCE" : value,
-    "PROOF" : SHA256 hash value
+    "hashpointer" : { prior transaction object }
+    "nonce" : value,
+    "proof" : sha256 hash value
 }
 
 
-Transaction defintion that is used in the Transaction File
+transaction defintion that is used in the transaction file
 
 {
-    "NUMBER" : transaction identififer,
-    "TYPE" : transfer, merge, or join,
-    "INPUT" : [
+    "type" : transfer, merge, or join,
+    "input" : [
+        transaction number,
+        ...
+        transaction number
+    ],
+    "output" : [
         {
-            "NUMBER" : transaction number
+            value : (publickey.n, publickey.e)
         },
         ...
         {
-            "NUMBER" : transaction number
+            value : (publickey.n, publickey.e),
         }
     ],
-    "OUTPUT" : [
-        {
-            "value" : value,
-            "key" : pub key
-        },
-        ...
-        {
-            "value" : value,
-            "key" : pub key
-        }
+    "signature" : [
+        signature of type,
+        signature of input,
+        signature of output
     ],
-    "SIGNATURE" : [
-        {
-            "signature" : value
-        },
-        ...
-
-        {
-            "signature" : value
-        }
-    ]
+    "number" : transaction identififer
 }
