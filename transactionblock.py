@@ -8,7 +8,7 @@ TYPES = ["trans", "join", "merge"]
 class TransactionBlock:
     #TODO: Write method to read a transaction from json TransactionFile and populate all values here except prev, nonce, and proof for all transactions
     def __init__(self, transaction):
-        self.type = choice(TYPES)
+        self.type = transaction.type
         self.input = transaction.input
         self.output = transaction.output
         self.signature = transaction.signature

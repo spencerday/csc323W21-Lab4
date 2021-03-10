@@ -62,17 +62,17 @@ if __name__ == '__main__':
                                               generate_valid_output(identities[1]),
                                               identities[4]))
     #Max receives 5 coins from Spencer, 5 coins from John
-    all_valid_transactions.append(Transaction('merge',[[all_valid_transactions[3].number, all_valid_transactions[3].output],
+    all_valid_transactions.append(Transaction('join',[[all_valid_transactions[3].number, all_valid_transactions[3].output],
                                                        [all_valid_transactions[5].number, all_valid_transactions[5].output]],
                                               {10 : (hex(identities[3].n), hex(identities[3].e))},
                                               identities[3]))
-    #Alice sends 5 coins to Bob
-    all_valid_transactions.append(Transaction([all_valid_transactions[8].number, all_valid_transactions[8].output],
-                                              generate_valid_output(identities[1]),
+    #Alice sends 4 coins to Bob
+    all_valid_transactions.append(Transaction('trans',[all_valid_transactions[0].number, all_valid_transactions[0].output],
+                                              {4 : (hex(identities[1].n), hex(identities[1].e))},
                                               identities[0]))
-    #Bob sends 5 coins to Max
-    all_valid_transactions.append(Transaction([all_valid_transactions[9].number, all_valid_transactions[9].output],
-                                              generate_valid_output(identities[3]),
+    #Bob receives payments of 5 and 4 coins from Alice
+    all_valid_transactions.append(Transaction('merge', [[all_valid_transactions[1].number, all_valid_transactions[1].output],[all_valid_transactions[9].number, all_valid_transactions[9].output]],
+                                              generate_valid_output(identities[1]),
                                               identities[1]))
     #TODO: split transactions with multiple inputs into separate transactions
     #e.g. 10 to Bob, 8 to Alice in genesis block
