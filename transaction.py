@@ -13,11 +13,11 @@ class Transaction:
     Class used to generate random transactions
     """
 
-    def __init__(self, type, inputs, outputs, identity):
+    def __init__(self, type, input, output, identity):
         """
         Parameters:
             inputs - set containing transaction numbers
-            outputs - a set of dicts in the form {value: (pubkey.n, pubKey.e)}
+            outputs - a set of dicts in the form {"value": value, "key": (pubkey.n, pubKey.e)}
             identity - RSA object
         """
         self.type = type

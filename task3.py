@@ -1,6 +1,7 @@
 from Crypto.PublicKey import RSA
 from random import choice, randint
 from transaction import Transaction
+import json
 
 
 def generate_random_output(identities):
@@ -9,14 +10,19 @@ def generate_random_output(identities):
     value = randint(1,10)
     return {value: (hex(identity.n), hex(identity.e))}
 
+
 def generate_valid_output(identity):
-    return {5: (hex(identity.n), hex(identity.e))}
+    return {"value": randint(1, 15), "key": (hex(identity.n), hex(identity.e))}
 
 
 def generate_genesis_output(identities):
-    identity = identities[0]
-    value = 25
-    return {value: (hex(identity.n), hex(identity.e))}
+    identity1 = identities[0]
+    return {25 : (hex(identity1.n), hex(identity1.e))
+    # identity2 = identities[3]
+    # outputs = []
+    # outputs.append({15: (hex(identity1.n), hex(identity1.e))})
+    # outputs.append({10: (hex(identity2.n), hex(identity2.e))})
+    # return outputs
 
 if __name__ == '__main__':
     #Generates 5 static identities to populate transaction file
