@@ -18,6 +18,7 @@ class Node:
     def validate(self, identities):
         #TODO: Run checks for valid transactions: Signature verifies transaction, each input used once, number of coins in input matches those in output
         valid = False
+        inputcoins = 0
         #For each of the 3 signatures
         for i in range(3):
             for identity in identities:
@@ -31,16 +32,21 @@ class Node:
                 hashFromSignature = pow(self.sig[i], identity.e, identity.n)
                 if hash == hashFromSignature:
                     print("Valid identity (N Value): " + str(identity.n))
+                    valid = True
                     break
-        if self.input[1] in self.seeninputs:
-            print("Error: Attempted Double Spending")
-            del UTP[self.key]
+        for pair in self.input:
+            if pair in self.seeninputs:
+                print("Error: Attempted Double Spending")
+                del UTP[self.key]
+                valid = False
+            else:
+                self.seeninputs.append(pair)
+        for pair in self.input:
+            inputcoins += pair[1].key
+        if inputcoins != self.output.key:
+            print("Coins in input don't match coins in output")
             valid = False
-        else:
-            self.seeninputs.append(self.input[1])
-
-
-
+        return valid
 
     def proof_of_work(self):
         #TODO: Loop randomly chooses nonce, appends to serialized version of transaction, and hash until
