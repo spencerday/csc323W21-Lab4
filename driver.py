@@ -134,12 +134,9 @@ if __name__ == "__main__":
     UTP = readValidTransactionFile()
     print(UTP)
 
-
-    testnode = Node(UTP, identities)
     print(testnode.unverified.type)
     print(testnode.unverified.input)
     print(testnode.unverified.output)
     print(testnode.unverified.signature)
     print(testnode.unverified.number)
     print(testnode.validate())
-

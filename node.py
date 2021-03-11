@@ -2,12 +2,13 @@ from random import choice
 from transaction import Transaction
 from hashlib import sha256
 from pools import VTP
+from threading import Thread
 
 #Unverified transaction Pool
 UTP = {} # Format: Transaction number: TransactionBlock
 
 
-class Node:
+class Node(Thread):
     def __init__(self, utp, identities):
         #self.key = choice(utp.keys())
         self.utp = utp
@@ -18,6 +19,9 @@ class Node:
         self.identities = identities
         self.seeninputs = []
         self.prev = None
+
+    def run(self):
+        return
 
     def validate(self):
         #TODO: Run checks for valid transactions: Signature verifies transaction, each input used once, number of coins in input matches those in output
@@ -80,4 +84,4 @@ class Node:
             + str(self.sig) + str(self.unverified.number), 'latin')).hexdigest()
             self.prev = hash
             self.proof_of_work()
-    #TODO: Support forks in Node's chain
+        #TODO: Support forks in Node's chain
