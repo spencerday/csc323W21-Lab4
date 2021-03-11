@@ -5,6 +5,7 @@ from transactionblock import TransactionBlock
 from transaction import Transaction
 from Crypto.PublicKey import RSA
 from random import choice, randint
+from pools import UTP, VTP
 
 VTP = {}
 FILE = "TransactionFile.json"
@@ -64,37 +65,37 @@ def main():
     all_valid_transactions = [Transaction('trans', None, generate_genesis_output(identities), identities[0])]
     # Alice sends 5 coins to Bob
     all_valid_transactions.append(
-        Transaction('trans', [all_valid_transactions[0].number, all_valid_transactions[0].output],
+        Transaction('trans', [[all_valid_transactions[0].number, all_valid_transactions[0].output]],
                     generate_valid_output(identities[1]),
                     identities[0]))
     # Bob sends 5 coins to John
     all_valid_transactions.append(
-        Transaction('trans', [all_valid_transactions[1].number, all_valid_transactions[1].output],
+        Transaction('trans', [[all_valid_transactions[1].number, all_valid_transactions[1].output]],
                     generate_valid_output(identities[2]),
                     identities[1]))
     # John sends 5 coins to Max
     all_valid_transactions.append(
-        Transaction('trans', [all_valid_transactions[2].number, all_valid_transactions[2].output],
+        Transaction('trans', [[all_valid_transactions[2].number, all_valid_transactions[2].output]],
                     generate_valid_output(identities[3]),
                     identities[2]))
     # max sends 5 coins to Spencer
     all_valid_transactions.append(
-        Transaction('trans', [all_valid_transactions[3].number, all_valid_transactions[3].output],
+        Transaction('trans', [[all_valid_transactions[3].number, all_valid_transactions[3].output]],
                     generate_valid_output(identities[4]),
                     identities[3]))
     # Spencer sends 5 coins to Max
     all_valid_transactions.append(
-        Transaction('trans', [all_valid_transactions[4].number, all_valid_transactions[4].output],
+        Transaction('trans', [[all_valid_transactions[4].number, all_valid_transactions[4].output]],
                     generate_valid_output(identities[3]),
                     identities[4]))
     # Max sends 5 coins to John
     all_valid_transactions.append(
-        Transaction('trans', [all_valid_transactions[5].number, all_valid_transactions[5].output],
+        Transaction('trans', [[all_valid_transactions[5].number, all_valid_transactions[5].output]],
                     generate_valid_output(identities[2]),
                     identities[3]))
     # Spencer double spends 5 coins to Bob
     all_valid_transactions.append(
-        Transaction('trans', [all_valid_transactions[4].number, all_valid_transactions[4].output],
+        Transaction('trans', [[all_valid_transactions[4].number, all_valid_transactions[4].output]],
                     generate_valid_output(identities[1]),
                     identities[4]))
     # Max receives 5 coins from Spencer, 5 coins from John
@@ -105,7 +106,7 @@ def main():
                     identities[3]))
     # Alice sends 4 coins to Bob
     all_valid_transactions.append(
-        Transaction('trans', [all_valid_transactions[0].number, all_valid_transactions[0].output],
+        Transaction('trans', [[all_valid_transactions[0].number, all_valid_transactions[0].output]],
                     {'value': 4 , 'key':(hex(identities[1].n), hex(identities[1].e))},
                     identities[0]))
     # Bob receives payments of 5 and 4 coins from Alice

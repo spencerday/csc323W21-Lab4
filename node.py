@@ -1,7 +1,7 @@
 from random import choice
 from transaction import Transaction
 from hashlib import sha256
-#from driver import VTP
+from pools import VTP
 
 #Unverified transaction Pool
 UTP = {} # Format: Transaction number: TransactionBlock
@@ -23,7 +23,6 @@ class Node:
         #TODO: Run checks for valid transactions: Signature verifies transaction, each input used once, number of coins in input matches those in output
         valid = False
         inputcoins = 0
-
         #if input does not yet exist, move on to next transaction
         if self.input is None:
            return False
@@ -49,8 +48,8 @@ class Node:
                 valid = False
             else:
                 self.seeninputs.append(pair)
-
-        inputcoins += self.input[1]['value']
+        for pair in self.input:
+            inputcoins += pair[1]['value']
         if inputcoins < self.output['value']:
             print("Coins in input don't match coins in output")
             valid = False
