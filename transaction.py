@@ -21,8 +21,8 @@ class Transaction:
             identity - RSA object
         """
         self.type = type
-        self.input = inputs
-        self.output = outputs
+        self.input = input
+        self.output = output
         self.signature = [
             pow(int.from_bytes(sha256(bytes(self.type, 'latin')).digest(), byteorder='big'), identity.d, identity.n),
             pow(int.from_bytes(sha256(bytes(str(self.input), 'latin')).digest(), byteorder='big'), identity.d, identity.n),

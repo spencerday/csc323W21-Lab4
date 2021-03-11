@@ -9,8 +9,8 @@ class TransactionBlock:
     #TODO: Write method to read a transaction from json TransactionFile and populate all values here except prev, nonce, and proof for all transactions
     def __init__(self, type, input, output, signature, number):
         self.type = type
-        self.inputs = input
-        self.outputs = output
+        self.input = input
+        self.output = output
         self.signature = signature
         self.number = number
         self.nonce = None
