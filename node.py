@@ -68,6 +68,7 @@ class Node:
                 #Add unverified to VTP
                 VTP[self.unverified.number] = self.unverified
                 #Delete from UTP
+                #TODO: Braodcast signal for other nodes to stop mining
                 del self.utp[self.unverified.number]
                 break
             nonce += 1
