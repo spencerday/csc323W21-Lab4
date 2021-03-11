@@ -80,9 +80,13 @@ class Node(Thread):
     def update_prev(self):
         #TODO: Update previous verified transaction for an element of UTP with last item in VTP
         #For first transaction, this is the hash of the genesis
+        #TODO: Figure out where to put the hash, either in Node or current unverified transaction
         if self.validate():
-            hash = sha256(bytes(str(self.unverified.type) + str(self.input) + str(self.output)
-            + str(self.sig) + str(self.unverified.number), 'latin')).hexdigest()
+            prev = list(VTP.items())[-1]
+            prev = prev[0]
+            verified = VTP[prev]
+            hash = sha256(bytes(str(verified.type) + str(verified.input) + str(verified.output)
+            + str(verified.sig) + str(verified.number) + str(verified.prev) + str(verified.nonce) + str(verified.proof), 'latin')).hexdigest()
             self.prev = hash
             self.proof_of_work()
         #TODO: Support forks in Node's chain

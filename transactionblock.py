@@ -13,6 +13,7 @@ class TransactionBlock:
         self.output = output
         self.signature = signature
         self.number = number
+        self.prev = None
         self.nonce = None
         self.proof = None
 
