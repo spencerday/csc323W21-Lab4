@@ -1,17 +1,13 @@
 from random import choice
 from transaction import Transaction
 from hashlib import sha256
-from pools import VTP
+from pools import VTP, UTP
 from threading import Thread
-
-#Unverified transaction Pool
-UTP = {} # Format: Transaction number: TransactionBlock
 
 
 class Node(Thread):
-    def __init__(self, utp, identities):
-        self.utp = utp
-        self.unverified = choice(list(utp.values()))
+    def __init__(self, identities):
+        self.unverified = choice(list(UTP.values()))
         self.sig = self.unverified.signature
         self.input = self.unverified.input
         self.output = self.unverified.output
@@ -19,7 +15,9 @@ class Node(Thread):
         self.seeninputs = []
 
     def run(self):
-        return
+        if self.validate():
+            self.update_prev()
+            return
 
     def validate(self):
         #TODO: Run checks for valid transactions: Signature verifies transaction, each input used once, number of coins in input matches those in output
@@ -46,7 +44,7 @@ class Node(Thread):
         for pair in self.input:
             if pair in self.seeninputs:
                 print("Error: Attempted Double Spending")
-                del self.utp[self.unverified.number]
+                del UTP[self.unverified.number]
                 valid = False
             else:
                 self.seeninputs.append(pair)
@@ -69,7 +67,7 @@ class Node(Thread):
                 VTP[self.unverified.number] = self.unverified
                 #Delete from UTP
                 #TODO: Braodcast signal for other nodes to stop mining
-                del self.utp[self.unverified.number]
+                del UTP[self.unverified.number]
                 break
             nonce += 1
 
@@ -77,12 +75,12 @@ class Node(Thread):
         #TODO: Update previous verified transaction for an element of UTP with last item in VTP
         #For first transaction, this is the hash of the genesis
         #TODO: Figure out where to put the hash, either in Node or current unverified transaction
-        if self.validate():
-            prev = list(VTP.items())[-1]
-            prev = prev[0]
-            verified = VTP[prev]
-            hash = sha256(bytes(str(verified.type) + str(verified.input) + str(verified.output)
-            + str(verified.sig) + str(verified.number) + str(verified.prev) + str(verified.nonce) + str(verified.proof), 'latin')).hexdigest()
-            self.unverified.prev = hash
-            self.proof_of_work()
+
+        prev = list(VTP.items())[-1]
+        prev = prev[0]
+        verified = VTP[prev]
+        hash = sha256(bytes(str(verified.type) + str(verified.input) + str(verified.output)
+        + str(verified.sig) + str(verified.number) + str(verified.prev) + str(verified.nonce) + str(verified.proof), 'latin')).hexdigest()
+        self.unverified.prev = hash
+        self.proof_of_work()
         #TODO: Support forks in Node's chain

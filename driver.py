@@ -7,7 +7,6 @@ from Crypto.PublicKey import RSA
 from random import choice, randint
 from pools import UTP, VTP
 
-VTP = {}
 FILE = "TransactionFile.json"
 def generate_random_output(identities):
     #TODO: Generate output to two identities
@@ -28,25 +27,6 @@ def generate_genesis_output(identities):
     # outputs.append({15: (hex(identity1.n), hex(identity1.e))})
     # outputs.append({10: (hex(identity2.n), hex(identity2.e))})
 
-def readValidTransactionFile():
-    """
-    Returns a list where each element is a dictionary representation of a transaction
-    in the Transaction File
-    """
-    utp = {}
-
-    with open('ValidTransactionFile.json', "r") as f:
-        transactions = [json.loads(t) for t in f.read()[:-2].split("$")]
-
-    for t in transactions:
-        trans = TransactionBlock(t["type"],
-                                 t["input"],
-                                 t["output"],
-                                 t["signature"],
-                                 t["number"])
-        utp[trans.number] = trans
-
-    return utp
 
 def main():
     # Generates 5 static identities to populate transaction file
@@ -131,7 +111,6 @@ if __name__ == "__main__":
     Format: {transaction number: TransactionBlock}
     """
     identities = main()
-    UTP = readValidTransactionFile()
     print(UTP)
     dict_pairs = UTP.items()
     pairs_iterator = iter(dict_pairs)
@@ -140,7 +119,7 @@ if __name__ == "__main__":
     print(VTP)
     del UTP[genesis[0]]
     print(UTP)
-    testnode = Node(UTP, identities)
+    testnode = Node(identities)
     print(testnode.unverified.type)
     print(testnode.unverified.input)
     print(testnode.unverified.output)
