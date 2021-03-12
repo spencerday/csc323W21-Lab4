@@ -10,7 +10,6 @@ UTP = {} # Format: Transaction number: TransactionBlock
 
 class Node(Thread):
     def __init__(self, utp, identities):
-        #self.key = choice(utp.keys())
         self.utp = utp
         self.unverified = choice(list(utp.values()))
         self.sig = self.unverified.signature
@@ -59,12 +58,10 @@ class Node(Thread):
         return valid
 
     def proof_of_work(self):
-        #TODO: Loop randomly chooses nonce, appends to serialized version of transaction, and hash until
-        # hash <= 0x00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         nonce = 0
         while(True):
             hash = sha256(bytes(str(self.unverified.type) + str(self.input) + str(self.output)
-            + str(self.sig) + str(self.unverified.number) + str(nonce), "latin")).hexdigest()
+            + str(self.sig) + str(self.unverified.number) + str(self.unverified.prev)+ str(nonce), "latin")).hexdigest()
             if hash <= 0x00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF:
                 self.unverified.nonce = nonce
                 self.unverified.proof = hash
