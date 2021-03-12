@@ -18,7 +18,6 @@ class Node(Thread):
         self.output = self.unverified.output
         self.identities = identities
         self.seeninputs = []
-        self.prev = None
 
     def run(self):
         return
@@ -42,7 +41,7 @@ class Node(Thread):
                     hash = int.from_bytes(sha256(bytes(str(self.unverified.output), 'latin')).digest(), byteorder='big')
                 hashFromSignature = pow(self.sig[i], identity.e, identity.n)
                 if hash == hashFromSignature:
-                    print("Valid identity (N Value): " + str(identity.n))
+                    print("Valid identity (N Value): " + str(hex(identity.n)))
                     valid = True
                     break
         for pair in self.input:
@@ -55,7 +54,7 @@ class Node(Thread):
         for pair in self.input:
             inputcoins += pair[1]['value']
         if inputcoins < self.output['value']:
-            print("Coins in input don't match coins in output")
+            print("# Coins in input don't satisfy coins in output")
             valid = False
         return valid
 
@@ -87,6 +86,6 @@ class Node(Thread):
             verified = VTP[prev]
             hash = sha256(bytes(str(verified.type) + str(verified.input) + str(verified.output)
             + str(verified.sig) + str(verified.number) + str(verified.prev) + str(verified.nonce) + str(verified.proof), 'latin')).hexdigest()
-            self.prev = hash
+            self.unverified.prev = hash
             self.proof_of_work()
         #TODO: Support forks in Node's chain
