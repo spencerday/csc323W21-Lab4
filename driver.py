@@ -136,7 +136,6 @@ if __name__ == "__main__":
     """
 
     print(UTP)
-    print('hello')
 
     identities = main()
     UTP = readValidTransactionFile()
@@ -160,4 +159,7 @@ if __name__ == "__main__":
     verified = VTP[genesis[0]]
     print(sha256(bytes(str(verified.type) + str(verified.input) + str(verified.output)
         + str(verified.signature) + str(verified.number) + str(verified.prev) + str(verified.nonce) + str(verified.proof), 'latin')).hexdigest())
+    testnode.proof_of_work()
+    print(testnode.unverified.nonce)
+    print(testnode.unverified.proof)
 

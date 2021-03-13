@@ -7,6 +7,7 @@ from threading import Thread
 
 class Node(Thread):
     def __init__(self, identities, utp):
+        self.utp = utp
         self.unverified = choice(list(utp.values()))
         self.sig = self.unverified.signature
         self.input = self.unverified.input
@@ -57,8 +58,8 @@ class Node(Thread):
     def proof_of_work(self):
         nonce = 0
         while(True):
-            hash = sha256(bytes(str(self.unverified.type) + str(self.input) + str(self.output)
-            + str(self.sig) + str(self.unverified.number) + str(self.unverified.prev)+ str(nonce), "latin")).hexdigest()
+            hash = int.from_bytes(sha256(bytes(str(self.unverified.type) + str(self.input) + str(self.output)
+            + str(self.sig) + str(self.unverified.number) + str(self.unverified.prev)+ str(nonce), "latin")).digest(), byteorder='big')
             if hash <= 0x00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF:
                 self.unverified.nonce = nonce
                 self.unverified.proof = hash
