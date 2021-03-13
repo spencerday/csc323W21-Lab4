@@ -1,0 +1,7 @@
+Left to do
+
+1. test proof of work and add prev
+2. put transactions in the VTP
+3. finish driver
+4. choose additional feauture
+5. fork support
