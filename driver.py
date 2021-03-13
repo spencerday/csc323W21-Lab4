@@ -148,8 +148,11 @@ if __name__ == "__main__":
     del UTP[genesis[0]]
     print(UTP)
     testnode = Node(identities, UTP, VTP)
-    #testnode.run()
-    #testnode.join()
+    print(len(UTP))
+    print(len(VTP))
+    testnode.run()
+    testnode.join()
+    print("----------------------------------------------")
     print(UTP)
     print(VTP)
     print(testnode.unverified.type)
