@@ -1,13 +1,14 @@
 from random import choice
 from transaction import Transaction
 from hashlib import sha256
-from pools import VTP, UTP
+from pools import VTP
 from threading import Thread
 
 
 class Node(Thread):
-    def __init__(self, identities):
-        self.unverified = choice(list(UTP.values()))
+    def __init__(self, identities, utp):
+        self.utp = utp
+        self.unverified = choice(list(utp.values()))
         self.sig = self.unverified.signature
         self.input = self.unverified.input
         self.output = self.unverified.output
@@ -44,7 +45,7 @@ class Node(Thread):
         for pair in self.input:
             if pair in self.seeninputs:
                 print("Error: Attempted Double Spending")
-                del UTP[self.unverified.number]
+                del self.utp[self.unverified.number]
                 valid = False
             else:
                 self.seeninputs.append(pair)
@@ -67,7 +68,7 @@ class Node(Thread):
                 VTP[self.unverified.number] = self.unverified
                 #Delete from UTP
                 #TODO: Braodcast signal for other nodes to stop mining
-                del UTP[self.unverified.number]
+                del self.utp[self.unverified.number]
                 break
             nonce += 1
 
@@ -80,7 +81,14 @@ class Node(Thread):
         prev = prev[0]
         verified = VTP[prev]
         hash = sha256(bytes(str(verified.type) + str(verified.input) + str(verified.output)
-        + str(verified.sig) + str(verified.number) + str(verified.prev) + str(verified.nonce) + str(verified.proof), 'latin')).hexdigest()
+        + str(verified.signature) + str(verified.number) + str(verified.prev) + str(verified.nonce) + str(verified.proof), 'latin')).hexdigest()
         self.unverified.prev = hash
-        self.proof_of_work()
+        #self.proof_of_work()
         #TODO: Support forks in Node's chain
+        """
+    def add_and_verify(self):
+        for trans in VTP:
+            to_verify = Node(self.identities, VTP)
+            if to_verify.validate():
+                print()
+"""

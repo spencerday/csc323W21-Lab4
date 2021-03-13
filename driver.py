@@ -1,13 +1,37 @@
 import json
 from time import sleep
+from hashlib import sha256
 from node import Node
 from transactionblock import TransactionBlock
 from transaction import Transaction
 from Crypto.PublicKey import RSA
 from random import choice, randint
-from pools import UTP, VTP
+from pools import VTP
+import pools
 
 FILE = "TransactionFile.json"
+UTP = {}
+
+def readValidTransactionFile():
+    """
+    Returns a list where each element is a dictionary representation of a transaction
+    in the Transaction File
+    """
+    utp = {}
+
+    with open('ValidTransactionFile.json', "r") as f:
+        transactions = [json.loads(t) for t in f.read()[:-2].split("$")]
+
+    for t in transactions:
+        trans = TransactionBlock(t["type"],
+                                 t["input"],
+                                 t["output"],
+                                 t["signature"],
+                                 t["number"])
+        utp[trans.number] = trans
+
+    return utp
+
 def generate_random_output(identities):
     #TODO: Generate output to two identities
     identity = choice(identities)
@@ -110,7 +134,12 @@ if __name__ == "__main__":
 
     Format: {transaction number: TransactionBlock}
     """
+
+    print(UTP)
+    print('hello')
+
     identities = main()
+    UTP = readValidTransactionFile()
     print(UTP)
     dict_pairs = UTP.items()
     pairs_iterator = iter(dict_pairs)
@@ -119,10 +148,16 @@ if __name__ == "__main__":
     print(VTP)
     del UTP[genesis[0]]
     print(UTP)
-    testnode = Node(identities)
+    testnode = Node(identities, UTP)
     print(testnode.unverified.type)
     print(testnode.unverified.input)
     print(testnode.unverified.output)
     print(testnode.unverified.signature)
     print(testnode.unverified.number)
     print(testnode.validate())
+    testnode.update_prev()
+    print(testnode.unverified.prev)
+    verified = VTP[genesis[0]]
+    print(sha256(bytes(str(verified.type) + str(verified.input) + str(verified.output)
+        + str(verified.signature) + str(verified.number) + str(verified.prev) + str(verified.nonce) + str(verified.proof), 'latin')).hexdigest())
+
