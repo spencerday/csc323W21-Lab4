@@ -6,18 +6,21 @@ from threading import Thread
 
 
 class Node(Thread):
-    def __init__(self, identities, utp):
-        self.utp = utp
+    def __init__(self, identities, utp, vtp):
         self.unverified = choice(list(utp.values()))
         self.sig = self.unverified.signature
         self.input = self.unverified.input
         self.output = self.unverified.output
         self.identities = identities
         self.seeninputs = []
+        self.utp = utp
+        self.vtp = vtp
 
     def run(self):
-        if self.validate():
-            self.update_prev()
+        while (len(self.utp) > 0):
+            if self.validate():
+                self.update_prev()
+            self.unverified = choice(list(self.utp.values()))
             
     def validate(self):
         #TODO: Run checks for valid transactions: Signature verifies transaction, each input used once, number of coins in input matches those in output
@@ -68,6 +71,7 @@ class Node(Thread):
                 #Delete from UTP
                 #TODO: Braodcast signal for other nodes to stop mining
                 del self.utp[self.unverified.number]
+                self.vtp[self.unverified.number] = self.unverified.JSON()
                 break
             nonce += 1
 
