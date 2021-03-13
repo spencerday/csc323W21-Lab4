@@ -7,7 +7,6 @@ from threading import Thread
 
 class Node(Thread):
     def __init__(self, identities, utp):
-        self.utp = utp
         self.unverified = choice(list(utp.values()))
         self.sig = self.unverified.signature
         self.input = self.unverified.input
@@ -18,8 +17,7 @@ class Node(Thread):
     def run(self):
         if self.validate():
             self.update_prev()
-            return
-
+            
     def validate(self):
         #TODO: Run checks for valid transactions: Signature verifies transaction, each input used once, number of coins in input matches those in output
         valid = False
@@ -85,6 +83,7 @@ class Node(Thread):
         self.unverified.prev = hash
         #self.proof_of_work()
         #TODO: Support forks in Node's chain
+
         """
     def add_and_verify(self):
         for trans in VTP:
@@ -92,3 +91,4 @@ class Node(Thread):
             if to_verify.validate():
                 print()
 """
+
