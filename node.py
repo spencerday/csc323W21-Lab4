@@ -5,7 +5,6 @@ from pools import VTP
 import threading
 from time import sleep
 
-
 class Node(threading.Thread):
     def __init__(self, identities, utp, vtp, nodeName):
         threading.Thread.__init__(self)
@@ -22,29 +21,7 @@ class Node(threading.Thread):
 
     def run(self):
         while (len(self.utp) > 0):
-<<<<<<< HEAD
-            print(f"{self.nodeName}")
             # print(f"{self.nodeName}\nutp = {len(self.utp)} vtp = {len(self.vtp)}")
-            # if self.validate():
-            #     self.update_prev()
-            #     self.proof_of_work()
-            #     if len(self.chain) == 0:
-            #         dict_pairs = self.vtp.items()
-            #         pairs_iterator = iter(dict_pairs)
-            #         genesis = next(pairs_iterator)
-            #         self.chain.append(genesis)
-            #     else:
-            #         prev = list(self.vtp.items())[-1]
-            #         prev = prev[0]
-            #         self.chain.append(self.vtp[prev])
-            # self.unverified = choice(list(self.utp.values()))
-            # self.sig = self.unverified.signature
-            # self.input = self.unverified.input
-            # self.output = self.unverified.output
-            # print("Chain: " + str(self.chain))
-            sleep(10)
-=======
-            print(f"NODE\nutp = {len(self.utp)} vtp = {len(self.vtp)}")
             if self.validate():
                 self.update_prev()
                 self.proof_of_work()
@@ -54,18 +31,19 @@ class Node(threading.Thread):
                     genesis = next(pairs_iterator)
                     self.chain.append(genesis)
                 else:
+
                     prev = list(self.vtp.items())[-1]
                     prev = prev[0]
-                    self.chain.append(self.vtp[prev])
-            print("Current UTP State: " + str(list(self.utp.values())))
+                    self.chain.append(self.vtp[prev].number)
+            # print("Current UTP State: " + str(list(self.utp.values())))
             if len(self.utp) > 0:
                 self.unverified = choice(list(self.utp.values()))
                 self.sig = self.unverified.signature
                 self.input = self.unverified.input
                 self.output = self.unverified.output
-                print("Chain: " + str(self.chain))
->>>>>>> e4b723fdf35dcfd8d0cbdd59ee683058d21695b6
-            
+                print(f"{self.nodeName}, Chain: " + str(self.chain) + "\n")
+
+           
     def validate(self):
         #TODO: Run checks for valid transactions: Signature verifies transaction, each input used once, number of coins in input matches those in output
         valid = False
@@ -85,20 +63,23 @@ class Node(threading.Thread):
                     hash = int.from_bytes(sha256(bytes(str(self.unverified.output), 'latin')).digest(), byteorder='big')
                 hashFromSignature = pow(self.sig[i], identity.e, identity.n)
                 if hash == hashFromSignature:
-                    print("Valid identity (N Value): " + str(hex(identity.n)))
+                    # print("Valid identity (N Value): " + str(hex(identity.n)))
                     valid = True
                     break
         for pair in self.input:
             if pair in self.seeninputs:
-                print("Error: Attempted Double Spending")
-                del self.utp[self.unverified.number]
+                # print("Error: Attempted Double Spending")
+                try:
+                    del self.utp[self.unverified.number]
+                except KeyError:
+                    pass
                 return False
             else:
                 self.seeninputs.append(pair)
         for pair in self.input:
             inputcoins += pair[1]['value']
         if inputcoins < self.output['value']:
-            print("# Coins in input don't satisfy coins in output")
+            # print("# Coins in input don't satisfy coins in output")
             valid = False
         return valid
 
