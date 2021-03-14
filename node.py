@@ -22,15 +22,16 @@ class Node(Thread):
             print(f"NODE\nutp = {len(self.utp)} vtp = {len(self.vtp)}")
             if self.validate():
                 self.update_prev()
+                self.proof_of_work()
                 if len(self.chain) == 0:
-                    dict_pairs = VTP.items()
+                    dict_pairs = self.vtp.items()
                     pairs_iterator = iter(dict_pairs)
                     genesis = next(pairs_iterator)
                     self.chain.append(genesis)
                 else:
-                    prev = list(VTP.items())[-1]
+                    prev = list(self.vtp.items())[-1]
                     prev = prev[0]
-                    self.chain.append(VTP[prev])
+                    self.chain.append(self.vtp[prev])
             self.unverified = choice(list(self.utp.values()))
             self.sig = self.unverified.signature
             self.input = self.unverified.input
@@ -95,9 +96,9 @@ class Node(Thread):
         #For first transaction, this is the hash of the genesis
         #TODO: Figure out where to put the hash, either in Node or current unverified transaction
 
-        prev = list(VTP.items())[-1]
+        prev = list(self.vtp.items())[-1]
         prev = prev[0]
-        verified = VTP[prev]
+        verified = self.vtp[prev]
         hash = sha256(bytes(str(verified.type) + str(verified.input) + str(verified.output)
         + str(verified.signature) + str(verified.number) + str(verified.prev) + str(verified.nonce) + str(verified.proof), 'latin')).hexdigest()
         self.unverified.prev = hash
