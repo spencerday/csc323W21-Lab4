@@ -22,6 +22,7 @@ class Node(threading.Thread):
 
     def run(self):
         while (len(self.utp) > 0):
+<<<<<<< HEAD
             print(f"{self.nodeName}")
             # print(f"{self.nodeName}\nutp = {len(self.utp)} vtp = {len(self.vtp)}")
             # if self.validate():
@@ -42,6 +43,28 @@ class Node(threading.Thread):
             # self.output = self.unverified.output
             # print("Chain: " + str(self.chain))
             sleep(10)
+=======
+            print(f"NODE\nutp = {len(self.utp)} vtp = {len(self.vtp)}")
+            if self.validate():
+                self.update_prev()
+                self.proof_of_work()
+                if len(self.chain) == 0:
+                    dict_pairs = self.vtp.items()
+                    pairs_iterator = iter(dict_pairs)
+                    genesis = next(pairs_iterator)
+                    self.chain.append(genesis)
+                else:
+                    prev = list(self.vtp.items())[-1]
+                    prev = prev[0]
+                    self.chain.append(self.vtp[prev])
+            print("Current UTP State: " + str(list(self.utp.values())))
+            if len(self.utp) > 0:
+                self.unverified = choice(list(self.utp.values()))
+                self.sig = self.unverified.signature
+                self.input = self.unverified.input
+                self.output = self.unverified.output
+                print("Chain: " + str(self.chain))
+>>>>>>> e4b723fdf35dcfd8d0cbdd59ee683058d21695b6
             
     def validate(self):
         #TODO: Run checks for valid transactions: Signature verifies transaction, each input used once, number of coins in input matches those in output
