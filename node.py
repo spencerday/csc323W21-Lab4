@@ -32,11 +32,13 @@ class Node(Thread):
                     prev = list(self.vtp.items())[-1]
                     prev = prev[0]
                     self.chain.append(self.vtp[prev])
-            self.unverified = choice(list(self.utp.values()))
-            self.sig = self.unverified.signature
-            self.input = self.unverified.input
-            self.output = self.unverified.output
-            print("Chain: " + str(self.chain))
+            print("Current UTP State: " + str(list(self.utp.values())))
+            if len(self.utp) > 0:
+                self.unverified = choice(list(self.utp.values()))
+                self.sig = self.unverified.signature
+                self.input = self.unverified.input
+                self.output = self.unverified.output
+                print("Chain: " + str(self.chain))
             
     def validate(self):
         #TODO: Run checks for valid transactions: Signature verifies transaction, each input used once, number of coins in input matches those in output
