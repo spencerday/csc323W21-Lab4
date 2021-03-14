@@ -166,4 +166,6 @@ if __name__ == "__main__":
     testnode.proof_of_work()
     print(testnode.unverified.nonce)
     print(testnode.unverified.proof)
+    print(VTP)
+    print(UTP)
 

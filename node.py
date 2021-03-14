@@ -15,12 +15,26 @@ class Node(Thread):
         self.seeninputs = []
         self.utp = utp
         self.vtp = vtp
+        self.chain = []
 
     def run(self):
         while (len(self.utp) > 0):
             if self.validate():
                 self.update_prev()
+                if len(self.chain) == 0:
+                    dict_pairs = VTP.items()
+                    pairs_iterator = iter(dict_pairs)
+                    genesis = next(pairs_iterator)
+                    self.chain.append(genesis)
+                else:
+                    prev = list(VTP.items())[-1]
+                    prev = prev[0]
+                    self.chain.append(VTP[prev])
             self.unverified = choice(list(self.utp.values()))
+            self.sig = self.unverified.signature
+            self.input = self.unverified.input
+            self.output = self.unverified.output
+            print(self.chain)
             
     def validate(self):
         #TODO: Run checks for valid transactions: Signature verifies transaction, each input used once, number of coins in input matches those in output
@@ -67,11 +81,11 @@ class Node(Thread):
                 self.unverified.nonce = nonce
                 self.unverified.proof = hash
                 #Add unverified to VTP
-                VTP[self.unverified.number] = self.unverified
+                #VTP[self.unverified.number] = self.unverified
                 #Delete from UTP
                 #TODO: Braodcast signal for other nodes to stop mining
                 del self.utp[self.unverified.number]
-                self.vtp[self.unverified.number] = self.unverified.JSON()
+                self.vtp[self.unverified.number] = self.unverified
                 break
             nonce += 1
 
