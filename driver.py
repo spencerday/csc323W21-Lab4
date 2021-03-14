@@ -135,21 +135,15 @@ if __name__ == "__main__":
     Format: {transaction number: TransactionBlock}
     """
 
-    print(UTP)
-
     identities = main()
     UTP = readValidTransactionFile()
-    print(UTP)
     dict_pairs = UTP.items()
     pairs_iterator = iter(dict_pairs)
     genesis = next(pairs_iterator)
     VTP[genesis[0]] = genesis[1]
-    print(VTP)
     del UTP[genesis[0]]
-    print(UTP)
     testnode = Node(identities, UTP, VTP)
-    print(len(UTP))
-    print(len(VTP))
+
     testnode.run()
     testnode.join()
     print("----------------------------------------------")

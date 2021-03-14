@@ -7,6 +7,7 @@ from threading import Thread
 
 class Node(Thread):
     def __init__(self, identities, utp, vtp):
+        super(Node, self).__init__()
         self.unverified = choice(list(utp.values()))
         self.sig = self.unverified.signature
         self.input = self.unverified.input
@@ -29,10 +30,20 @@ class Node(Thread):
                     genesis = next(pairs_iterator)
                     self.chain.append(genesis)
                 else:
-                    prev = list(self.vtp.items())[-1]
-                    prev = prev[0]
-                    self.chain.append(self.vtp[prev])
-            print("Current UTP State: " + str(list(self.utp.values())))
+                    if len(self.vtp) > len(self.chain) + 1:
+                        self.chain = []
+                        dict_pairs = self.vtp.items()
+                        pairs_iterator = iter(dict_pairs)
+                        genesis = next(pairs_iterator)
+                        self.chain.append(genesis[0])
+                        for i in range(1, len(self.vtp)):
+                            prev = list(self.vtp.items())[i]
+                            prev = prev[0]
+                            self.chain.append(self.vtp[prev].number)
+                    else:
+                        prev = list(self.vtp.items())[-1]
+                        prev = prev[0]
+                        self.chain.append(self.vtp[prev].number)
             if len(self.utp) > 0:
                 self.unverified = choice(list(self.utp.values()))
                 self.sig = self.unverified.signature
@@ -59,7 +70,6 @@ class Node(Thread):
                     hash = int.from_bytes(sha256(bytes(str(self.unverified.output), 'latin')).digest(), byteorder='big')
                 hashFromSignature = pow(self.sig[i], identity.e, identity.n)
                 if hash == hashFromSignature:
-                    print("Valid identity (N Value): " + str(hex(identity.n)))
                     valid = True
                     break
         for pair in self.input:
