@@ -136,33 +136,35 @@ if __name__ == "__main__":
     """
 
     identities = main()
-    UTP = readValidTransactionFile()
-    dict_pairs = UTP.items()
+    UTP1 = readValidTransactionFile()
+    UTP2 = readValidTransactionFile()
+    UTP3 = readValidTransactionFile()
+    UTP4 = readValidTransactionFile()
+    UTP5 = readValidTransactionFile()
+    dict_pairs = UTP1.items()
     pairs_iterator = iter(dict_pairs)
     genesis = next(pairs_iterator)
     VTP[genesis[0]] = genesis[1]
-    del UTP[genesis[0]]
-    testnode = Node(identities, UTP, VTP)
-
-    testnode.run()
-    testnode.join()
-    print("----------------------------------------------")
-    print(UTP)
     print(VTP)
-    print(testnode.unverified.type)
-    print(testnode.unverified.input)
-    print(testnode.unverified.output)
-    print(testnode.unverified.signature)
-    print(testnode.unverified.number)
-    print(testnode.validate())
-    testnode.update_prev()
-    print(testnode.unverified.prev)
-    verified = VTP[genesis[0]]
-    print(sha256(bytes(str(verified.type) + str(verified.input) + str(verified.output)
-        + str(verified.signature) + str(verified.number) + str(verified.prev) + str(verified.nonce) + str(verified.proof), 'latin')).hexdigest())
-    testnode.proof_of_work()
-    print(testnode.unverified.nonce)
-    print(testnode.unverified.proof)
-    print(VTP)
-    print(UTP)
+    print("----------------------------------------------------------------------")
+    del UTP1[genesis[0]]
+    del UTP2[genesis[0]]
+    del UTP3[genesis[0]]
+    del UTP4[genesis[0]]
+    del UTP5[genesis[0]]
+    testnode1 = Node(identities, UTP1, VTP, "Node1")
+    testnode2 = Node(identities, UTP2, VTP, "Node2")
+    testnode3 = Node(identities, UTP3, VTP, "Node3")
+    testnode4 = Node(identities, UTP4, VTP, "Node4")
+    testnode5 = Node(identities, UTP5, VTP, "Node5")
+    testnode1.start()
+    testnode2.start()
+    testnode3.start()
+    testnode4.start()
+    testnode5.start()
+    # testnode1.join()
+    # testnode2.join()
+    # testnode3.join()
+    # testnode4.join()
+    # testnode5.join()
 
