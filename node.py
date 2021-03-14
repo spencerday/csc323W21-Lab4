@@ -36,7 +36,7 @@ class Node(Thread):
             self.sig = self.unverified.signature
             self.input = self.unverified.input
             self.output = self.unverified.output
-            print(self.chain)
+            print("Chain: " + str(self.chain))
             
     def validate(self):
         #TODO: Run checks for valid transactions: Signature verifies transaction, each input used once, number of coins in input matches those in output
@@ -64,7 +64,7 @@ class Node(Thread):
             if pair in self.seeninputs:
                 print("Error: Attempted Double Spending")
                 del self.utp[self.unverified.number]
-                valid = False
+                return False
             else:
                 self.seeninputs.append(pair)
         for pair in self.input:
@@ -92,9 +92,7 @@ class Node(Thread):
             nonce += 1
 
     def update_prev(self):
-        #TODO: Update previous verified transaction for an element of UTP with last item in VTP
         #For first transaction, this is the hash of the genesis
-        #TODO: Figure out where to put the hash, either in Node or current unverified transaction
 
         prev = list(self.vtp.items())[-1]
         prev = prev[0]
