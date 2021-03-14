@@ -19,6 +19,7 @@ class Node(Thread):
 
     def run(self):
         while (len(self.utp) > 0):
+            print(f"NODE\nutp = {len(self.utp)} vtp = {len(self.vtp)}")
             if self.validate():
                 self.update_prev()
                 if len(self.chain) == 0:
