@@ -56,7 +56,6 @@ class Node(threading.Thread):
 
            
     def validate(self):
-        #TODO: Run checks for valid transactions: Signature verifies transaction, each input used once, number of coins in input matches those in output
         valid = False
         inputcoins = 0
         #if input does not yet exist, move on to next transaction
@@ -83,7 +82,7 @@ class Node(threading.Thread):
                     del self.utp[self.unverified.number]
                     return False
                 except KeyError:
-                    pass
+                    return False
             else:
                 self.seeninputs.append(pair)
         for pair in self.input:
@@ -118,21 +117,9 @@ class Node(threading.Thread):
 
     def update_prev(self):
         #For first transaction, this is the hash of the genesis
-
         prev = list(self.vtp.items())[-1]
         prev = prev[0]
         verified = self.vtp[prev]
         hash = sha256(bytes(str(verified.type) + str(verified.input) + str(verified.output)
         + str(verified.signature) + str(verified.number) + str(verified.prev) + str(verified.nonce) + str(verified.proof), 'latin')).hexdigest()
         self.unverified.prev = hash
-        #self.proof_of_work()
-        #TODO: Support forks in Node's chain
-
-        """
-    def add_and_verify(self):
-        for trans in VTP:
-            to_verify = Node(self.identities, VTP)
-            if to_verify.validate():
-                print()
-"""
-

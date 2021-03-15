@@ -1,16 +1,14 @@
 import json
-from time import sleep
-from hashlib import sha256
 from node import Node
 from transactionblock import TransactionBlock
 from transaction import Transaction
 from Crypto.PublicKey import RSA
 from random import choice, randint
 from pools import VTP
-import pools
+
 
 FILE = "TransactionFile.json"
-UTP = {}
+
 
 def readValidTransactionFile():
     """
@@ -19,7 +17,7 @@ def readValidTransactionFile():
     """
     utp = {}
 
-    with open('ValidTransactionFile.json', "r") as f:
+    with open(FILE, "r") as f:
         transactions = [json.loads(t) for t in f.read()[:-2].split("$")]
 
     for t in transactions:
@@ -32,8 +30,8 @@ def readValidTransactionFile():
 
     return utp
 
+
 def generate_random_output(identities):
-    #TODO: Generate output to two identities
     identity = choice(identities)
     value = randint(1,10)
     return {value: (hex(identity.n), hex(identity.e))}
@@ -119,8 +117,6 @@ def main():
                                                [all_valid_transactions[9].number, all_valid_transactions[9].output]],
                                               generate_valid_output(identities[1]),
                                               identities[1]))
-    # TODO: split transactions with multiple inputs into separate transactions
-    # e.g. 10 to Bob, 8 to Alice in genesis block
 
     with open("ValidTransactionFile.json", "w") as f:
         for t in all_valid_transactions:
@@ -128,12 +124,8 @@ def main():
 
     return identities
 
-if __name__ == "__main__":
-    """
-    Transaction Pools
 
-    Format: {transaction number: TransactionBlock}
-    """
+if __name__ == "__main__":
 
     identities = main()
     # UTP1 = readValidTransactionFile()
