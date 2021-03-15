@@ -55,13 +55,11 @@ class Node(threading.Thread):
                 self.sig = self.unverified.signature
                 self.input = self.unverified.input
                 self.output = self.unverified.output
-
         print(f"{self.nodeName}, Chain: {self.chain}, chain length = {len(self.chain)}")
 
 
            
     def validate(self):
-        #TODO: Run checks for valid transactions: Signature verifies transaction, each input used once, number of coins in input matches those in output
         valid = False
         inputcoins = 0
         #if input does not yet exist, move on to next transaction
@@ -89,9 +87,11 @@ class Node(threading.Thread):
                                 badtransactions.append(self.unverified.number)
                 """
                 # print("Error: Attempted Double Spending")
-                badtransactions.append(self.unverified.number)
-                del self.utp[self.unverified.number]
-                return False
+                try:
+                    del self.utp[self.unverified.number]
+                    return False
+                except KeyError:
+                    return False
             else:
                 self.seeninputs.append(pair)
         for pair in self.input:
@@ -110,9 +110,16 @@ class Node(threading.Thread):
                 #print(f"{self.unverified.number} is valid")
                 self.unverified.nonce = nonce
                 self.unverified.proof = hash
-                del self.utp[self.unverified.number]
-                self.vtp[self.unverified.number] = self.unverified
-                break
+                #Add unverified to VTP
+                #VTP[self.unverified.number] = self.unverified
+                #Delete from UTP
+                #TODO: Braodcast signal for other nodes to stop mining
+                try:
+                    del self.utp[self.unverified.number]
+                    self.vtp[self.unverified.number] = self.unverified
+                    break
+                except KeyError:
+                    pass
             #Our transaction is in the VTP, so it's been mined already
             if self.unverified.number in self.vtp.keys():
                 break
@@ -120,21 +127,9 @@ class Node(threading.Thread):
 
     def update_prev(self):
         #For first transaction, this is the hash of the genesis
-
         prev = list(self.vtp.items())[-1]
         prev = prev[0]
         verified = self.vtp[prev]
         hash = sha256(bytes(str(verified.type) + str(verified.input) + str(verified.output)
         + str(verified.signature) + str(verified.number) + str(verified.prev) + str(verified.nonce) + str(verified.proof), 'latin')).hexdigest()
         self.unverified.prev = hash
-        #self.proof_of_work()
-        #TODO: Support forks in Node's chain
-
-        """
-    def add_and_verify(self):
-        for trans in VTP:
-            to_verify = Node(self.identities, VTP)
-            if to_verify.validate():
-                print()
-"""
-
