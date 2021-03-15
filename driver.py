@@ -7,7 +7,7 @@ from random import choice, randint
 from pools import VTP
 
 
-FILE = "TransactionFile.json"
+FILE = "ValidTransactionFile.json"
 
 
 def readValidTransactionFile():
