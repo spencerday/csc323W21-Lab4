@@ -1,0 +1,14 @@
+Talking Points
+
+-Start with Transaction, TransactionBlock
+-Explain how program gets its input
+-Generates 5 identities, makes array of transactions and dumps it into json
+-Reads json file and creates TransactionBlocks, puts the first block(genesis) into VTP and the rest into UTP
+-Go on to Verifying Node class
+-Explain validate, proof_of_work
+-Difficulties:
+Getting the Threads to work
+working with shared resources(VTP)
+Thinking about the implementation of the chain/Updating the chain
+
+Hopefully output shows up before end of the presentation
