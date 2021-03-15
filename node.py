@@ -52,7 +52,7 @@ class Node(threading.Thread):
                 self.sig = self.unverified.signature
                 self.input = self.unverified.input
                 self.output = self.unverified.output
-                print(f"{self.nodeName}, Chain: {self.chain}, chain length = {len(self.chain)}")
+        print(f"{self.nodeName}, Chain: {self.chain}, chain length = {len(self.chain)}")
 
            
     def validate(self):
@@ -79,8 +79,11 @@ class Node(threading.Thread):
         for pair in self.input:
             if pair in self.seeninputs:
                 # print("Error: Attempted Double Spending")
-                del self.utp[self.unverified.number]
-                return False
+                try:
+                    del self.utp[self.unverified.number]
+                    return False
+                except KeyError:
+                    pass
             else:
                 self.seeninputs.append(pair)
         for pair in self.input:
@@ -102,9 +105,12 @@ class Node(threading.Thread):
                 #VTP[self.unverified.number] = self.unverified
                 #Delete from UTP
                 #TODO: Braodcast signal for other nodes to stop mining
-                del self.utp[self.unverified.number]
-                self.vtp[self.unverified.number] = self.unverified
-                break
+                try:
+                    del self.utp[self.unverified.number]
+                    self.vtp[self.unverified.number] = self.unverified
+                    break
+                except KeyError:
+                    pass
             #Our transaction is in the VTP, so it's been mined already
             if self.unverified.number in self.vtp.keys():
                 break
