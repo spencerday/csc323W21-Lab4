@@ -55,8 +55,9 @@ class Node(threading.Thread):
                 self.sig = self.unverified.signature
                 self.input = self.unverified.input
                 self.output = self.unverified.output
-        print(f"{self.nodeName}, Chain: " + str(self.chain) + "\n")
-        print(f"{self.nodeName}, VTP: " + str(self.vtp) + "\n")
+
+        print(f"{self.nodeName}, Chain: {self.chain}, chain length = {len(self.chain)}")
+
 
            
     def validate(self):
@@ -82,9 +83,14 @@ class Node(threading.Thread):
                     break
         for pair in self.input:
             if pair in self.seeninputs:
-                #print(f"{self.nodeName} Error: Attempted Double Spending")
-                del self.utp[self.unverified.number]
+                """
+                                #print(f"{self.nodeName} Error: Attempted Double Spending")
+                                del self.utp[self.unverified.number]
+                                badtransactions.append(self.unverified.number)
+                """
+                # print("Error: Attempted Double Spending")
                 badtransactions.append(self.unverified.number)
+                del self.utp[self.unverified.number]
                 return False
             else:
                 self.seeninputs.append(pair)
