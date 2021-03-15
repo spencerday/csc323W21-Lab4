@@ -92,10 +92,10 @@ def main():
         Transaction('trans', [[all_valid_transactions[4].number, all_valid_transactions[4].output]],
                     generate_valid_output(identities[3]),
                     identities[4]))
-    # Max sends 5 coins to John
+    # Max sends 15 coins to John, but this one has less coins in input than in output
     all_valid_transactions.append(
         Transaction('trans', [[all_valid_transactions[5].number, all_valid_transactions[5].output]],
-                    generate_valid_output(identities[2]),
+                    {'value': 15, 'key':(hex(identities[2].n), hex(identities[2].e))},
                     identities[3]))
     # Spencer double spends 5 coins to Bob
     all_valid_transactions.append(

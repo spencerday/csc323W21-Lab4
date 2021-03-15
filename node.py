@@ -1,9 +1,10 @@
 from random import choice
 from transaction import Transaction
 from hashlib import sha256
-from pools import VTP
+from pools import badtransactions
 import threading
 from time import sleep
+
 
 
 class Node(threading.Thread):
@@ -21,6 +22,8 @@ class Node(threading.Thread):
         self.nodeName = nodeName
 
     def run(self):
+        for number in badtransactions:
+            del self.utp[number]
         while (len(self.utp) > 0):
             # print(f"{self.nodeName}\nutp = {len(self.utp)} vtp = {len(self.vtp)}")
             if self.validate():
@@ -52,7 +55,8 @@ class Node(threading.Thread):
                 self.sig = self.unverified.signature
                 self.input = self.unverified.input
                 self.output = self.unverified.output
-                print(f"{self.nodeName}, Chain: " + str(self.chain) + "\n")
+        print(f"{self.nodeName}, Chain: " + str(self.chain) + "\n")
+        print(f"{self.nodeName}, VTP: " + str(self.vtp) + "\n")
 
            
     def validate(self):
@@ -78,11 +82,9 @@ class Node(threading.Thread):
                     break
         for pair in self.input:
             if pair in self.seeninputs:
-                # print("Error: Attempted Double Spending")
-                try:
-                    del self.utp[self.unverified.number]
-                except KeyError:
-                    pass
+                #print(f"{self.nodeName} Error: Attempted Double Spending")
+                del self.utp[self.unverified.number]
+                badtransactions.append(self.unverified.number)
                 return False
             else:
                 self.seeninputs.append(pair)
@@ -99,12 +101,9 @@ class Node(threading.Thread):
             hash = int.from_bytes(sha256(bytes(str(self.unverified.type) + str(self.input) + str(self.output)
             + str(self.sig) + str(self.unverified.number) + str(self.unverified.prev)+ str(nonce), "latin")).digest(), byteorder='big')
             if hash <= 0x00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF:
+                #print(f"{self.unverified.number} is valid")
                 self.unverified.nonce = nonce
                 self.unverified.proof = hash
-                #Add unverified to VTP
-                #VTP[self.unverified.number] = self.unverified
-                #Delete from UTP
-                #TODO: Braodcast signal for other nodes to stop mining
                 del self.utp[self.unverified.number]
                 self.vtp[self.unverified.number] = self.unverified
                 break
